@@ -11,19 +11,23 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import android.widget.TextView;
 
 /** * Widget that lets users select a minimum and maximum value on a given numerical range. The range value types can be one of Long, Double, Integer, Float, Short, Byte or BigDecimal.
  * * * @param
  * * The Number type of the range values. One of Long, Double, Integer, Float, Short, Byte or BigDecimal. */
 public class RangeSeekBar<T extends Number> extends android.support.v7.widget.AppCompatImageView {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Bitmap thumbImage = BitmapFactory.decodeResource(getResources(), R.drawable.ic_unpressed);
-    private final Bitmap thumbPressedImage = BitmapFactory.decodeResource(getResources(), R.drawable.ic_pressed);
-    private final float thumbWidth = thumbImage.getWidth();
+    private final Bitmap thumbImageMin = BitmapFactory.decodeResource(getResources(), R.drawable.ic_unpressed);
+    private final Bitmap thumbImageMax = BitmapFactory.decodeResource(getResources(), R.drawable.ic_unpressed_2);
+    private final Bitmap thumbPressedImageMin = BitmapFactory.decodeResource(getResources(), R.drawable.ic_pressed);
+    private final Bitmap thumbPressedImageMax = BitmapFactory.decodeResource(getResources(), R.drawable.ic_pressed_2);
+    private final float thumbWidth = thumbImageMin.getWidth();
     private final float thumbHalfWidth = 0.5f * thumbWidth;
-    private final float thumbHalfHeight = 0.5f * thumbImage.getHeight();
+    private final float thumbHalfHeight = 0.5f * thumbImageMin.getHeight();
     private final float lineHeight = 0.3f * thumbHalfHeight;
     private final float padding = thumbHalfWidth;
     private final T absoluteMinValue, absoluteMaxValue;
@@ -34,6 +38,7 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
     private Thumb pressedThumb = null;
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener listener;
+    private TextView textView;
 
 
     public static final int DEFAULT_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
@@ -281,6 +286,9 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
         } else if (Thumb.MAX.equals(pressedThumb)) {
             setNormalizedMaxValue(screenToNormalized(x));
         }
+
+        // print in textview the min - max values selected on drag
+        textView.setText( (int)(normalizedMinValue * absoluteMaxValuePrim) + " - " + (int)( normalizedMaxValue * absoluteMaxValuePrim ) );
     }
 
     /**
@@ -315,7 +323,7 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(widthMeasureSpec)) {
             width = MeasureSpec.getSize(widthMeasureSpec);
         }
-        int height = thumbImage.getHeight();
+        int height = thumbImageMin.getHeight();
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
             height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec));
         }
@@ -345,10 +353,10 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
         canvas.drawRect(rect, paint);
 
         // draw minimum thumb
-        drawThumb(normalizedToScreen(normalizedMinValue), Thumb.MIN.equals(pressedThumb), canvas);
+        drawThumbMin(normalizedToScreen(normalizedMinValue), Thumb.MIN.equals(pressedThumb), canvas);
 
         // draw maximum thumb
-        drawThumb(normalizedToScreen(normalizedMaxValue), Thumb.MAX.equals(pressedThumb), canvas);
+        drawThumbMax(normalizedToScreen(normalizedMaxValue), Thumb.MAX.equals(pressedThumb), canvas);
     }
 
     /**
@@ -381,8 +389,12 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
      * @param pressed     Is the thumb currently in "pressed" state?
      * @param canvas      The canvas to draw upon.
      */
-    private void drawThumb(float screenCoord, boolean pressed, Canvas canvas) {
-        canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
+    private void drawThumbMin(float screenCoord, boolean pressed, Canvas canvas) {
+        canvas.drawBitmap(pressed ? thumbPressedImageMin : thumbImageMin, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
+    }
+
+    private void drawThumbMax(float screenCoord, boolean pressed, Canvas canvas) {
+        canvas.drawBitmap(pressed ? thumbPressedImageMax : thumbImageMax, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
     }
 
     /**
@@ -560,5 +572,13 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
             }
             throw new InstantiationError("can't convert " + this + " to a Number object");
         }
+    }
+
+    /** TextView where show the min and max value
+     *
+     * @param textView
+     */
+    public void setTextView( TextView textView){
+        this.textView = textView;
     }
 }

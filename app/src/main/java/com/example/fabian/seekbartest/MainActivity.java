@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         tvSb2 = (TextView) findViewById( R.id.tv_seek_bar_2 );
         tvSb3 = (TextView) findViewById( R.id.tv_seek_bar_3 );
         LinearLayout ll = (LinearLayout) findViewById( R.id.rl );
-        rangeSeekBar = new RangeSeekBar<>( 0, 100, getApplicationContext() );
+        rangeSeekBar = new RangeSeekBar<>( 0, 200, getApplicationContext() );
+        rangeSeekBar.setTextView( tvSb3 );
         ll.addView( rangeSeekBar );
 
         sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

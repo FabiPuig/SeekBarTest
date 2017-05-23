@@ -1,13 +1,11 @@
 package com.example.fabian.seekbartest;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar sb2;
     private TextView tvSb1;
     private TextView tvSb2;
+    private TextView tvSb3;
+    private RangeSeekBar<Integer> rangeSeekBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         sb2 = (SeekBar) findViewById( R.id.seekBar2 );
         tvSb1 = (TextView) findViewById( R.id.tv_seek_bar_1 );
         tvSb2 = (TextView) findViewById( R.id.tv_seek_bar_2 );
+        tvSb3 = (TextView) findViewById( R.id.tv_seek_bar_3 );
+        LinearLayout ll = (LinearLayout) findViewById( R.id.rl );
+        rangeSeekBar = new RangeSeekBar<>( 0, 100, getApplicationContext() );
+        ll.addView( rangeSeekBar );
 
         sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
@@ -69,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Toast.makeText( MainActivity.this, "seek bar progress:"+progressChanged,
                         Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                tvSb3.setText( minValue + " - " + maxValue );
+
             }
         });
 

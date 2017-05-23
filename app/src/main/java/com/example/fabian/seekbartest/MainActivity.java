@@ -15,7 +15,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private SeekBar sb1;
+    private SeekBar sb2;
     private TextView tvSb1;
+    private TextView tvSb2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         sb1 = (SeekBar) findViewById( R.id.seekBar1 );
+        sb2 = (SeekBar) findViewById( R.id.seekBar2 );
         tvSb1 = (TextView) findViewById( R.id.tv_seek_bar_1 );
+        tvSb2 = (TextView) findViewById( R.id.tv_seek_bar_2 );
 
         sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
@@ -33,6 +37,27 @@ public class MainActivity extends AppCompatActivity {
                 progressChanged = progress;
                 tvSb1.setText( String.valueOf( progressChanged ) );
 
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Toast.makeText( MainActivity.this, "seek bar progress:"+progressChanged,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sb2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressChanged = progress;
+                tvSb2.setText( String.valueOf( progressChanged ) );
             }
 
             @Override

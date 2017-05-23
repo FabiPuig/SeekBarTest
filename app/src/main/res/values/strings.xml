@@ -4,4 +4,9 @@
 
     <string name="tv_seekbar_1">SeekBar 1</string>
     <string name="tv_seek_bar_1_default_text">0</string>
+
+    <string name="tv_seekbar_2">SeekBar 2</string>
+    <string name="tv_seek_bar_2_default_text">0</string>
+
+
 </resources>
